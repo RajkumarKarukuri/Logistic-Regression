@@ -20,17 +20,20 @@ parch = st.number_input("Number of Parents/Children Aboard", min_value=0, max_va
 fare = st.number_input("Fare Paid", min_value=0.0, max_value=600.0, value=32.0)
 embarked = st.selectbox("Port of Embarkation", ["C", "Q", "S"])
 
-# Convert input to appropriate format
+# Map categorical values to numeric codes (must match how you trained the model)
+sex_encoded = 1 if sex == "male" else 0  # Assuming male=1, female=0 during training
+embarked_mapping = {"C": 0, "Q": 1, "S": 2}  # Adjust based on actual encoding
+embarked_encoded = embarked_mapping[embarked]
+
+# Create input DataFrame matching model expectations
 input_data = pd.DataFrame({
     'Pclass': [pclass],
-    'Sex': [1 if sex == "male" else 0],
+    'Sex': [sex_encoded],
     'Age': [age],
     'SibSp': [sibsp],
     'Parch': [parch],
     'Fare': [fare],
-    'Embarked_C': [1 if embarked == 'C' else 0],
-    'Embarked_Q': [1 if embarked == 'Q' else 0],
-    'Embarked_S': [1 if embarked == 'S' else 0]
+    'Embarked': [embarked_encoded]
 })
 
 # Make prediction
